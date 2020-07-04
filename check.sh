@@ -3,7 +3,7 @@ set -e
 
 SOURCE_DIR="yamlfix"
 TEST_DIR="tests"
-MIN_COVERAGE=80
+MIN_COVERAGE=20
 
 if [ ! "$(command -v black)" ] || [ ! "$(command -v flake8)" ] || [ ! "$(command -v shellcheck)" ] || [ ! "$(command -v yamllint)" ] || [ ! "$(command -v coverage)" ]; then
   ./install.sh
