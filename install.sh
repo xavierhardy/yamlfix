@@ -32,7 +32,7 @@ echo "Entering Python-3 virtual environment..."
 
 if [ ! "$(command -v poetry)" ]; then
   echo "Downloading and installing peotry..."
-  pip install poetry -r pypiofficial
+  pip install poetry
 fi
 
 echo "Installing project..."

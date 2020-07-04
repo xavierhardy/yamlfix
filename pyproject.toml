@@ -9,7 +9,7 @@ homepage = "https://github.com/xavierhardy/yamlfix"
 repository = "https://github.com/xavierhardy/yamlfix"
 documentation = "https://github.com/xavierhardy/yamlfix"
 
-keywords = ["packaging", "dependency", "skeleton"]
+keywords = ["formatter", "yaml"]
 
 classifiers = [
     "Topic :: Software Development"
