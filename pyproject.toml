@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "yamlfix"
+version = "1.0.0"
+description = "Python skeleton project using Poetry."
+authors = ["Xavier Hardy <xavierhardy@users.noreply.github.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/xavierhardy/yamlfix"
+repository = "https://github.com/xavierhardy/yamlfix"
+documentation = "https://github.com/xavierhardy/yamlfix"
+
+keywords = ["packaging", "dependency", "skeleton"]
+
+classifiers = [
+    "Topic :: Software Development"
+]
+
+[tool.poetry.scripts]
+yamlfix = "yamlfix.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+"ruamel.yaml" = "^0.16.10"
+
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
+coverage = "^5.0.4"
+flake8 = "^3.7.9"
+mypy = "^0.770"
+tox = "^3.14.5"
+yamllint = "^1.20.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.black]
+target_version = ['py36']
+include = '''
+(
+    ^/tests/
+  | ^/yamlfix/
+)
+'''
+exclude = '''
+(
+  /(
+      \.eggs
+    | \.git
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | __pycache__
+    | build
+    | dist
+  )/
+)
+'''

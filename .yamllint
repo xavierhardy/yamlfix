@@ -1,0 +1,10 @@
+---
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'
+
+ignore: |
+  /*.egg-info
+  /.mypy_cache
+  /.venv
