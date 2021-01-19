@@ -1,91 +1,19 @@
 #!/usr/bin/env python
 """
-Small skeleton Python-3 application trying to follow good practices such as automatic code formatting, unit testing,
-separations of concerns, linting and typing.
+A tool to fix yamllint issues.
 """
 
-import re
 from concurrent.futures import ProcessPoolExecutor
-from glob import iglob
 from logging import getLogger, Logger, Handler, INFO, WARN, ERROR
 from os import cpu_count
-from os.path import isfile
 from sys import argv
-from typing import Sequence, Any, Collection, Pattern
-
-from ruamel.yaml import load, dump, RoundTripLoader, RoundTripDumper
-from ruamel.yaml.comments import CommentedMap, CommentedSeq
-from ruamel.yaml.tokens import CommentToken
+from typing import Sequence
 
 from yamlfix.config import configure_app
 from yamlfix.config_parser import parse_arguments
+from yamlfix.files import find_files, format_file
 
 LOGGER = getLogger(__name__)
-
-COMMENT_START_REGEX = re.compile(r"^(\n?) *(#+)([^ #\n].*\n)")
-DEFAULT_INCLUDE = (re.compile(r".*\.ya?ml", re.IGNORECASE),)
-
-
-def fix_comment_start(comment: CommentToken):
-    comment.value = COMMENT_START_REGEX.sub(r"\1\2 \3", comment.value)
-
-
-def format_comments(data: Any):
-    if isinstance(data, (CommentedMap, CommentedSeq)):
-        comment = data.ca.comment
-        for comment_token in comment or []:
-            if isinstance(comment_token, CommentToken):
-                fix_comment_start(comment_token)
-
-        for token_list in data.ca.items.values():
-            for token in token_list:
-                if isinstance(token, CommentToken):
-                    fix_comment_start(token)
-
-        # it won't work with items() or iterating through it like list
-        if isinstance(data, CommentedMap):
-            for key in data.keys():
-                format_comments(data[key])
-        else:
-            for indx in range(len(data)):
-                format_comments(data[indx])
-
-
-def read_and_format_text(text: str) -> str:
-    data = load(text, RoundTripLoader)
-    format_comments(data)
-    return dump(data, Dumper=RoundTripDumper)
-
-
-def format_file(path: str, dry_run: bool) -> bool:
-    with open(path) as file_reader:
-        original_content = file_reader.read()
-
-    new_content = read_and_format_text(original_content)
-
-    if original_content != new_content:
-        if not dry_run:
-            with open(path, "w") as file_writer:
-                file_writer.write(new_content)
-        return True
-
-    return False
-
-
-def find_files(
-    path: str,
-    include: Collection[Pattern] = DEFAULT_INCLUDE,
-    exclude: Collection[Pattern] = (),
-):
-    for filename in iglob(path, recursive=True):
-        if (
-            not isfile(filename)
-            or any(rgx.match(filename) for rgx in exclude)
-            or not all(rgx.match(filename) for rgx in include)
-        ):
-            continue
-
-        yield path
 
 
 def log_result(total: int, changed: int, errors: int):
