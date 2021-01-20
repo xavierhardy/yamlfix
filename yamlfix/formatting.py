@@ -10,6 +10,9 @@ from ruamel.yaml import load, dump, RoundTripLoader, RoundTripDumper
 from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from ruamel.yaml.tokens import CommentToken
 
+from yamllint.config import YamlLintConfig
+from yamllint.rules.document_start import DEFAULT as DOCUMENT_START_DEFAULT
+
 StreamType = Any
 
 StreamTextType = StreamType
@@ -55,7 +58,22 @@ class Loader(RoundTripLoader):
         self.allow_duplicate_keys = allow_duplicate_keys
 
 
-def read_and_format_text(text: str) -> str:
+def read_and_format_text(text: str, config: Optional[YamlLintConfig] = None) -> str:
+    explicit_start = DOCUMENT_START_DEFAULT.get("present")
+    if config and config.rules:
+        rules = config.rules
+
+        if "document-start" in rules:
+            document_start_rule = rules["document-start"]
+            if not document_start_rule:
+                explicit_start = None
+            else:
+                explicit_start = document_start_rule.get("present", DOCUMENT_START_DEFAULT.get("present"))
+
+        # rule is disabled, leave current state
+        if explicit_start is None:
+            explicit_start = text.strip().startswith("---")
+
     data = load(text, Loader)
     format_comments(data)
-    return dump(data, Dumper=RoundTripDumper, explicit_start=True, block_seq_indent=2)
+    return dump(data, Dumper=RoundTripDumper, explicit_start=explicit_start, block_seq_indent=2)

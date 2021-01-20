@@ -6,18 +6,20 @@ File-related functions.
 import re
 from glob import iglob
 from os.path import isfile
-from typing import Collection, Pattern
+from typing import Collection, Pattern, Optional
+
+from yamllint.config import YamlLintConfig
 
 from yamlfix.formatting import read_and_format_text
 
 DEFAULT_INCLUDE = (re.compile(r".*\.ya?ml", re.IGNORECASE),)
 
 
-def format_file(path: str, dry_run: bool) -> bool:
+def format_file(path: str, dry_run: bool, yaml_config: Optional[YamlLintConfig] = None) -> bool:
     with open(path) as file_reader:
         original_content = file_reader.read()
 
-    new_content = read_and_format_text(original_content)
+    new_content = read_and_format_text(original_content, config=yaml_config)
 
     if original_content != new_content:
         if not dry_run:

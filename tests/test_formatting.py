@@ -1,202 +1,75 @@
 import unittest
 
-from yamlfix.formatting import read_and_format_text
+from yamllint.config import YamlLintConfig
 
 from tests.utils import LoggingTester
+from yamlfix.formatting import read_and_format_text
 
 
 class FormattingTest(LoggingTester):
-    def test_key_duplicates(self):
-        """key-duplicates"""
-        expected = """---
-test: 456
-"""
-
-        content = """---
-test: 456
-test: 42
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_document_start(self):
+    def test_default_document_start_enabled(self):
         """document-start"""
+        config_content = '{"rules": {"document-start": "enable"}}'
+
         expected = """---
-test: 42
+test: 79
 """
 
-        content = """test: 42
+        content = """test: 79
 """
-        output = read_and_format_text(content)
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
-    def test_new_line_at_end_of_file(self):
-        """new-line-at-end-of-file"""
-        expected = """---
-test: 42
+    def test_document_start_not_present(self):
+        """document-start"""
+        config_content = '{"rules": {"document-start": {"present": false}}}'
+
+        expected = """test: 12
 """
 
         content = """---
-test: 42"""
-        output = read_and_format_text(content)
+test: 12
+"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
-    def test_object_indentation(self):
-        """indentation"""
+    def test_document_start_present(self):
+        """document-start"""
+        config_content = '{"rules": {"document-start": {"present": true}}}'
+
         expected = """---
-things:
-  stuff:
-    something: 312
+test: 88
+"""
+
+        content = """test: 88
+"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+
+    def test_document_start_disable(self):
+        """document-start"""
+        config_content = '{"rules": {"document-start": "disable"}}'
+
+        expected = """---
+test: 77
 """
 
         content = """---
-things:
-    stuff:
-     something: 312
+test: 77
 """
-        output = read_and_format_text(content)
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
-    def test_array_indentation(self):
-        expected = """---
-somearray:
-  - item1
-  - item2
+    def test_document_start_disable_missing(self):
+        """document-start"""
+        config_content = '{"rules": {"document-start": "disable"}}'
+
+        expected = """test: 4452
 """
 
-        content = """---
-somearray:
-- item1
-- item2
+        content = """test: 4452
 """
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_comments_start(self):
-        """comments"""
-        expected = """---
-key: value  # comments should start with a space
-"""
-
-        content = """---
-key: value  #comments should start with a space
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_newlines(self):
-        """newlines"""
-        expected = """---
-key: value
-"""
-
-        content = """---\r
-key: value\r
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_trailing_spaces(self):
-        """trailing-spaces"""
-        expected = """---
-key: value
-"""
-
-        content = """---
-key: value   
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_hyphens(self):
-        """hyphens"""
-        expected = """---
-somelist:
-  - item1
-  - item2
-  - item3
-"""
-
-        content = """---
-somelist:
-  -  item1
-  -   item2
-  - item3
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_no_empty_lines_at_start(self):
-        """empty-lines"""
-        expected = """---
-something1: 45
-"""
-
-        content = """
----
-something1: 45
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_space_before_commas(self):
-        """commas"""
-        expected = """---
-array: [45, 789]
-"""
-
-        content = """---
-array: [45 , 789]
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_space_after_commas(self):
-        """commas"""
-        expected = """---
-array: [qwe, rty]
-"""
-
-        content = """---
-array: [qwe,  rty]
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_min_space_after_commas(self):
-        """commas"""
-        expected = """---
-array: [asd, fgh]
-"""
-
-        content = """---
-array: [asd,fgh]
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_min_space_after_colons(self):
-        """colons"""
-        expected = """---
-somekey: stuff
-"""
-
-        content = """---
-somekey:  stuff
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
-    def test_min_space_before_colons(self):
-        """colons"""
-        expected = """---
-somekey1: stuff
-"""
-
-        content = """---
-somekey1 : stuff
-"""
-        output = read_and_format_text(content)
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
 
