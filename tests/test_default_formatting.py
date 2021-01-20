@@ -19,17 +19,6 @@ test: 42
         output = read_and_format_text(content)
         self.assertEqual(expected, output)
 
-    def test_document_start(self):
-        """document-start"""
-        expected = """---
-test: 42
-"""
-
-        content = """test: 42
-"""
-        output = read_and_format_text(content)
-        self.assertEqual(expected, output)
-
     def test_new_line_at_end_of_file(self):
         """new-line-at-end-of-file"""
         expected = """---

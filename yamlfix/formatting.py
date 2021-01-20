@@ -12,6 +12,7 @@ from ruamel.yaml.tokens import CommentToken
 
 from yamllint.config import YamlLintConfig
 from yamllint.rules.document_start import DEFAULT as DOCUMENT_START_DEFAULT
+from yamllint.rules.document_end import DEFAULT as DOCUMENT_END_DEFAULT
 
 StreamType = Any
 
@@ -58,7 +59,10 @@ class Loader(RoundTripLoader):
         self.allow_duplicate_keys = allow_duplicate_keys
 
 
-def read_and_format_text(text: str, config: Optional[YamlLintConfig] = None) -> str:
+# def read_and_format_text(text: str, config: Optional[YamlLintConfig] = None) -> str: #YamlLintConfig("extends: default")) -> str:
+def read_and_format_text(text: str, config: Optional[YamlLintConfig] = YamlLintConfig("extends: default")) -> str:
+    stripped_text = text.strip()
+
     explicit_start = DOCUMENT_START_DEFAULT.get("present")
     if config and config.rules:
         rules = config.rules
@@ -72,8 +76,23 @@ def read_and_format_text(text: str, config: Optional[YamlLintConfig] = None) -> 
 
         # rule is disabled, leave current state
         if explicit_start is None:
-            explicit_start = text.strip().startswith("---")
+            explicit_start = stripped_text.startswith("---")
+
+    explicit_end = DOCUMENT_END_DEFAULT.get("present")
+    if config and config.rules:
+        rules = config.rules
+
+        if "document-end" in rules:
+            document_end_rule = rules["document-end"]
+            if not document_end_rule:
+                explicit_end = None
+            else:
+                explicit_end = document_end_rule.get("present", DOCUMENT_END_DEFAULT.get("present"))
+
+        # rule is disabled, leave current state
+        if explicit_end is None:
+            explicit_end = stripped_text.endswith("...")
 
     data = load(text, Loader)
     format_comments(data)
-    return dump(data, Dumper=RoundTripDumper, explicit_start=explicit_start, block_seq_indent=2)
+    return dump(data, Dumper=RoundTripDumper, explicit_start=explicit_start, explicit_end=explicit_end, block_seq_indent=2)
