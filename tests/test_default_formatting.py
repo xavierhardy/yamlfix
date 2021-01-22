@@ -34,8 +34,8 @@ test: 42"""
         """indentation"""
         expected = """---
 things:
-  stuff:
-    something: 312
+    stuff:
+        something: 312
 """
 
         content = """---

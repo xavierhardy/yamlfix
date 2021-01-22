@@ -62,7 +62,10 @@ def main(args: Sequence[str] = None, logger: Logger = None, handler: Handler = N
         # executor.map would trigger if one of the underlying function calls
         # raised an exception on iterating
         futures = map(
-            lambda pth: executor.submit(format_file, pth, dry_run=check_only, config=yaml_config), paths
+            lambda pth: executor.submit(
+                format_file, pth, dry_run=check_only, config=yaml_config
+            ),
+            paths,
         )
 
         # list makes sure the futures are all submitted before waiting on the first results

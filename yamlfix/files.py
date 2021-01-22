@@ -15,7 +15,9 @@ from yamlfix.formatting import read_and_format_text
 DEFAULT_INCLUDE = (re.compile(r".*\.ya?ml", re.IGNORECASE),)
 
 
-def format_file(path: str, dry_run: bool, yaml_config: Optional[YamlLintConfig] = None) -> bool:
+def format_file(
+    path: str, dry_run: bool, yaml_config: Optional[YamlLintConfig] = None
+) -> bool:
     with open(path) as file_reader:
         original_content = file_reader.read()
 

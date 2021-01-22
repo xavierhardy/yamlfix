@@ -13,6 +13,7 @@ from ruamel.yaml.tokens import CommentToken
 from yamllint.config import YamlLintConfig
 from yamllint.rules.document_start import DEFAULT as DOCUMENT_START_DEFAULT
 from yamllint.rules.document_end import DEFAULT as DOCUMENT_END_DEFAULT
+from yamllint.rules.indentation import DEFAULT as INDENTATION_DEFAULT
 
 StreamType = Any
 
@@ -59,11 +60,32 @@ class Loader(RoundTripLoader):
         self.allow_duplicate_keys = allow_duplicate_keys
 
 
-# def read_and_format_text(text: str, config: Optional[YamlLintConfig] = None) -> str: #YamlLintConfig("extends: default")) -> str:
-def read_and_format_text(text: str, config: Optional[YamlLintConfig] = YamlLintConfig("extends: default")) -> str:
+def find_first_indent(text):
+    for line in text.splitlines():
+        if not line.startswith(" "):
+            continue
+
+        indent = 0
+        for c in line:
+            if c == "#":
+                break
+
+            if c != " ":
+                return indent
+
+            indent += 1
+
+
+def read_and_format_text(
+    text: str, config: Optional[YamlLintConfig] = YamlLintConfig("extends: default")
+) -> str:
     stripped_text = text.strip()
 
     explicit_start = DOCUMENT_START_DEFAULT.get("present")
+    explicit_end = DOCUMENT_END_DEFAULT.get("present")
+    indent = INDENTATION_DEFAULT.get("spaces")
+    block_seq_indent = INDENTATION_DEFAULT.get("indent-sequences")
+    # TODO: check-multi-line-strings
     if config and config.rules:
         rules = config.rules
 
@@ -72,27 +94,52 @@ def read_and_format_text(text: str, config: Optional[YamlLintConfig] = YamlLintC
             if not document_start_rule:
                 explicit_start = None
             else:
-                explicit_start = document_start_rule.get("present", DOCUMENT_START_DEFAULT.get("present"))
+                explicit_start = document_start_rule.get("present", explicit_start)
 
         # rule is disabled, leave current state
         if explicit_start is None:
             explicit_start = stripped_text.startswith("---")
-
-    explicit_end = DOCUMENT_END_DEFAULT.get("present")
-    if config and config.rules:
-        rules = config.rules
 
         if "document-end" in rules:
             document_end_rule = rules["document-end"]
             if not document_end_rule:
                 explicit_end = None
             else:
-                explicit_end = document_end_rule.get("present", DOCUMENT_END_DEFAULT.get("present"))
+                explicit_end = document_end_rule.get("present", explicit_end)
 
         # rule is disabled, leave current state
         if explicit_end is None:
             explicit_end = stripped_text.endswith("...")
 
+        if "indentation" in rules:
+            indentation_rule = rules["indentation"]
+            if not indentation_rule:
+                indent = "consistent"
+                block_seq_indent = True
+            else:
+                indent = indentation_rule.get("spaces", indent)
+                block_seq_indent = indentation_rule.get(
+                    "indent-sequences", block_seq_indent
+                )
+
+    if indent == "consistent":
+        indent = find_first_indent(text) or 2
+
+    if block_seq_indent:
+        if indent:
+            block_seq_indent = indent
+        else:
+            block_seq_indent = 2
+    else:
+        block_seq_indent = None
+
     data = load(text, Loader)
     format_comments(data)
-    return dump(data, Dumper=RoundTripDumper, explicit_start=explicit_start, explicit_end=explicit_end, block_seq_indent=2)
+    return dump(
+        data,
+        Dumper=RoundTripDumper,
+        explicit_start=explicit_start,
+        explicit_end=explicit_end,
+        block_seq_indent=block_seq_indent,
+        indent=indent,
+    )

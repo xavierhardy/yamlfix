@@ -6,90 +6,125 @@ from tests.utils import LoggingTester
 from yamlfix.formatting import read_and_format_text
 
 
-class DocumentEndRuleTest(LoggingTester):
-    """document-end"""
+class IndentationRuleTest(LoggingTester):
+    """indentation"""
 
     def test_no_config(self):
         expected = """---
-test: 42
+test:
+   key: value
+   lst:
+      - item1
+   obj:
+      something: else
 """
 
         content = """---
-test: 42
+test:
+   key: value
+   lst:
+   - item1
+   obj:
+    something: else
 """
         output = read_and_format_text(content)
         self.assertEqual(expected, output)
 
     def test_default_enabled(self):
-        config_content = '{"extends": "default", "rules": {"document-end": "enable"}}'
+        config_content = '{"extends": "default", "rules": {"indentation": "enable"}}'
 
         expected = """---
-test: 79
-...
+test:
+  key: value
+  lst:
+    - item1
 """
 
         content = """---
-test: 79
+test:
+  key: value
+  lst:
+  - item1
+"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+        output = read_and_format_text(content)
+        self.assertEqual(expected, output)
+
+    def test_default_disabled(self):
+        config_content = '{"extends": "default", "rules": {"indentation": "disable"}}'
+
+        expected = """---
+test:
+  key: value
+  lst:
+    - item1
+"""
+
+        content = """---
+test:
+  key: value
+  lst:
+  - item1
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
-    def test_not_present(self):
+    def test_defined_indent(self):
         config_content = (
-            '{"extends": "default", "rules": {"document-end": {"present": false}}}'
+            '{"extends": "default", "rules": {"indentation": {"spaces": 6}}}'
         )
 
         expected = """---
-test: 12
+test:
+      key: value
+      lst:
+            - item1
 """
 
         content = """---
-test: 12
-...
+test:
+  key: value
+  lst:
+  - item1
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
-    def test_present(self):
-        config_content = (
-            '{"extends": "default", "rules": {"document-end": {"present": true}}}'
-        )
+    def test_no_sequence_indentation(self):
+        config_content = '{"extends": "default", "rules": {"indentation": {"indent-sequences": false}}}'
 
         expected = """---
-test: 88
-...
+test:
+  key: value
+  lst:
+  - item1
 """
 
         content = """---
-test: 88
+test:
+  key: value
+  lst:
+   - item1
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
-    def test_disable(self):
-        config_content = '{"extends": "default", "rules": {"document-end": "disable"}}'
+    def test_sequence_indentation(self):
+        config_content = '{"extends": "default", "rules": {"indentation": {"indent-sequences": true}}}'
 
         expected = """---
-test: 77
-...
+test:
+  key: value
+  lst:
+    - item1
 """
 
         content = """---
-test: 77
-...
-"""
-        output = read_and_format_text(content, YamlLintConfig(content=config_content))
-        self.assertEqual(expected, output)
-
-    def test_disable_missing(self):
-        config_content = '{"extends": "default", "rules": {"document-end": "disable"}}'
-
-        expected = """---
-test: 4452
-"""
-
-        content = """---
-test: 4452
+test:
+  key: value
+  lst:
+  - item1
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)

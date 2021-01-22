@@ -32,7 +32,9 @@ test: 79
         self.assertEqual(expected, output)
 
     def test_not_present(self):
-        config_content = '{"extends": "default", "rules": {"document-start": {"present": false}}}'
+        config_content = (
+            '{"extends": "default", "rules": {"document-start": {"present": false}}}'
+        )
 
         expected = """test: 12
 """
@@ -44,7 +46,9 @@ test: 12
         self.assertEqual(expected, output)
 
     def test_present(self):
-        config_content = '{"extends": "default", "rules": {"document-start": {"present": true}}}'
+        config_content = (
+            '{"extends": "default", "rules": {"document-start": {"present": true}}}'
+        )
 
         expected = """---
 test: 88
@@ -56,7 +60,9 @@ test: 88
         self.assertEqual(expected, output)
 
     def test_disable(self):
-        config_content = '{"extends": "default", "rules": {"document-start": "disable"}}'
+        config_content = (
+            '{"extends": "default", "rules": {"document-start": "disable"}}'
+        )
 
         expected = """---
 test: 77
@@ -69,7 +75,9 @@ test: 77
         self.assertEqual(expected, output)
 
     def test_disable_missing(self):
-        config_content = '{"extends": "default", "rules": {"document-start": "disable"}}'
+        config_content = (
+            '{"extends": "default", "rules": {"document-start": "disable"}}'
+        )
 
         expected = """test: 4452
 """
