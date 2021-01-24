@@ -11,6 +11,7 @@ from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from ruamel.yaml.tokens import CommentToken
 
 from yamllint.config import YamlLintConfig
+from yamllint.rules.comments import DEFAULT as COMMENTS_DEFAULT
 from yamllint.rules.document_start import DEFAULT as DOCUMENT_START_DEFAULT
 from yamllint.rules.document_end import DEFAULT as DOCUMENT_END_DEFAULT
 from yamllint.rules.indentation import DEFAULT as INDENTATION_DEFAULT
@@ -33,6 +34,10 @@ def format_comments(data: Any):
         for comment_token in comment or []:
             if isinstance(comment_token, CommentToken):
                 fix_comment_start(comment_token)
+            elif isinstance(comment_token, list):
+                for tkn in comment_token:
+                    if isinstance(tkn, CommentToken):
+                        fix_comment_start(tkn)
 
         for token_list in data.ca.items.values():
             for token in token_list:
@@ -86,6 +91,8 @@ def read_and_format_text(
     indent = INDENTATION_DEFAULT.get("spaces")
     block_seq_indent = INDENTATION_DEFAULT.get("indent-sequences")
     # TODO: check-multi-line-strings
+    comment_starting_space = COMMENTS_DEFAULT.get("require-starting-space")
+    # TODO: min-spaces-from-content, ignore-shebangs
     if config and config.rules:
         rules = config.rules
 
@@ -122,6 +129,12 @@ def read_and_format_text(
                     "indent-sequences", block_seq_indent
                 )
 
+        if "comments" in rules:
+            comment_rule = rules["comments"]
+            comment_starting_space = comment_rule and comment_rule.get(
+                "require-starting-space", comment_starting_space
+            )
+
     if indent == "consistent":
         indent = find_first_indent(text) or 2
 
@@ -134,7 +147,8 @@ def read_and_format_text(
         block_seq_indent = None
 
     data = load(text, Loader)
-    format_comments(data)
+    if comment_starting_space:
+        format_comments(data)
     return dump(
         data,
         Dumper=RoundTripDumper,
