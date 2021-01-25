@@ -93,7 +93,7 @@ key: value
 
         content = """---
 key: value   
-"""
+"""  # noqa: W291
         output = read_and_format_text(content)
         self.assertEqual(expected, output)
 

@@ -11,10 +11,13 @@ from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from ruamel.yaml.tokens import CommentToken
 
 from yamllint.config import YamlLintConfig
-from yamllint.rules.comments import DEFAULT as COMMENTS_DEFAULT
-from yamllint.rules.document_start import DEFAULT as DOCUMENT_START_DEFAULT
-from yamllint.rules.document_end import DEFAULT as DOCUMENT_END_DEFAULT
-from yamllint.rules.indentation import DEFAULT as INDENTATION_DEFAULT
+from yamllint.rules import (
+    comments,
+    document_start,
+    document_end,
+    new_lines,
+    indentation,
+)
 
 StreamType = Any
 
@@ -86,13 +89,14 @@ def read_and_format_text(
 ) -> str:
     stripped_text = text.strip()
 
-    explicit_start = DOCUMENT_START_DEFAULT.get("present")
-    explicit_end = DOCUMENT_END_DEFAULT.get("present")
-    indent = INDENTATION_DEFAULT.get("spaces")
-    block_seq_indent = INDENTATION_DEFAULT.get("indent-sequences")
+    explicit_start = document_start.DEFAULT.get("present")
+    explicit_end = document_end.DEFAULT.get("present")
+    indent = indentation.DEFAULT.get("spaces")
+    block_seq_indent = indentation.DEFAULT.get("indent-sequences")
     # TODO: check-multi-line-strings
-    comment_starting_space = COMMENTS_DEFAULT.get("require-starting-space")
+    comment_starting_space = comments.DEFAULT.get("require-starting-space")
     # TODO: min-spaces-from-content, ignore-shebangs
+    new_line_type = new_lines.DEFAULT.get("type")
     if config and config.rules:
         rules = config.rules
 
@@ -135,6 +139,12 @@ def read_and_format_text(
                 "require-starting-space", comment_starting_space
             )
 
+        if "new-lines" in rules:
+            new_line_rule = rules["new-lines"]
+            new_line_type = (
+                new_line_rule.get("type", new_line_type) if new_line_rule else None
+            )
+
     if indent == "consistent":
         indent = find_first_indent(text) or 2
 
@@ -146,6 +156,13 @@ def read_and_format_text(
     else:
         block_seq_indent = None
 
+    if new_line_type == "unix":
+        line_break = "\n"
+    elif new_line_type == "dos" or "\r\n" in text:
+        line_break = "\r\n"
+    else:
+        line_break = "\n"
+
     data = load(text, Loader)
     if comment_starting_space:
         format_comments(data)
@@ -156,4 +173,5 @@ def read_and_format_text(
         explicit_end=explicit_end,
         block_seq_indent=block_seq_indent,
         indent=indent,
+        line_break=line_break,
     )

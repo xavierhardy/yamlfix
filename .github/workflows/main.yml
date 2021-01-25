@@ -15,19 +15,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Install python3
-      run: sudo apt-get install python3
+      - name: Install python3
+        run: sudo apt-get install python3
 
-    - name: Install shellcheck
-      run: sudo apt-get install shellcheck
+      - name: Install shellcheck
+        run: sudo apt-get install shellcheck
 
-    - name: Upgrade pip
-      run: sudo pip install --upgrade pip
+      - name: Upgrade pip
+        run: sudo pip install --upgrade pip
 
-    - name: Install dependencies
-      run: PATH=$PATH:$HOME/.local/bin ./install.sh
+      - name: Install dependencies
+        run: PATH=$PATH:$HOME/.local/bin ./install.sh
 
-    - name: Run checks
-      run: PATH=$PATH:$HOME/.local/bin ./check.sh
+      - name: Run checks
+        run: PATH=$PATH:$HOME/.local/bin ./check.sh
