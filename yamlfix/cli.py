@@ -45,14 +45,15 @@ def main(args: Sequence[str] = None, logger: Logger = None, handler: Handler = N
 
     config = parse_arguments(*args)
     configure_app(config, logger, handler=handler)
-    paths = set()
-    for path in config.get("paths", []):
-        paths.update(find_files(path))
 
     try:
         yaml_config = YamlLintConfig(file=".yamllint")
     except IOError:
         yaml_config = None
+
+    paths = set()
+    for path in config.get("paths", []):
+        paths.update(find_files(path, yaml_config=yaml_config))
 
     check_only = config.get("check")
     fail_text = "FAIL" if check_only else "reformatted"

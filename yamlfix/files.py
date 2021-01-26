@@ -3,7 +3,6 @@
 File-related functions.
 """
 
-import re
 from glob import iglob
 from os.path import isfile
 from typing import Collection, Pattern, Optional
@@ -12,7 +11,7 @@ from yamllint.config import YamlLintConfig
 
 from yamlfix.formatting import read_and_format_text
 
-DEFAULT_INCLUDE = (re.compile(r".*\.ya?ml", re.IGNORECASE),)
+DEFAULT_CONFIG = YamlLintConfig("extends: default")
 
 
 def format_file(
@@ -32,16 +31,32 @@ def format_file(
     return False
 
 
+def is_matching_path(
+    filename: str,
+    include: Collection[Pattern] = (),
+    exclude: Collection[Pattern] = (),
+    yaml_config: Optional[YamlLintConfig] = DEFAULT_CONFIG,
+) -> bool:
+    return (
+        all(rgx.match(filename) is None for rgx in exclude)
+        and (yaml_config is None or not yaml_config.is_file_ignored(filename))
+        and (
+            any(rgx.match(filename) for rgx in include)
+            or yaml_config is None
+            or yaml_config.is_yaml_file(filename)
+        )
+    )
+
+
 def find_files(
     path: str,
-    include: Collection[Pattern] = DEFAULT_INCLUDE,
+    include: Collection[Pattern] = (),
     exclude: Collection[Pattern] = (),
+    yaml_config: Optional[YamlLintConfig] = DEFAULT_CONFIG,
 ):
     for filename in iglob(path, recursive=True):
-        if (
-            not isfile(filename)
-            or any(rgx.match(filename) for rgx in exclude)
-            or not all(rgx.match(filename) for rgx in include)
+        if not isfile(filename) or not is_matching_path(
+            filename, include=include, exclude=exclude, yaml_config=yaml_config
         ):
             continue
 
