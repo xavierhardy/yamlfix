@@ -33,6 +33,12 @@ def parse_arguments(*args: str) -> Config:
         "-v", "--verbose", action="store_true", help="Enable debug logging"
     )
     logging_arg_group.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        help="Don't emit non-error messages to stderr. Errors are still emitted; silence those with 2>/dev/null.",
+    )
+    logging_arg_group.add_argument(
         "-l",
         "--log_level",
         type=int,
