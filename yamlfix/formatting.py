@@ -8,6 +8,7 @@ from typing import Any, Union, Tuple, List, Optional
 
 from ruamel.yaml import load, dump, RoundTripLoader, RoundTripDumper
 from ruamel.yaml.comments import CommentedMap, CommentedSeq
+from ruamel.yaml.scalarint import OctalInt, ScalarInt
 from ruamel.yaml.tokens import CommentToken
 
 from yamllint.config import YamlLintConfig
@@ -16,6 +17,7 @@ from yamllint.rules import (
     document_start,
     document_end,
     new_lines,
+    octal_values,
     indentation,
 )
 
@@ -54,6 +56,27 @@ def format_comments(data: Any):
         else:
             for indx in range(len(data)):
                 format_comments(data[indx])
+
+
+def format_octals(data: Any, forbid_implicit_octal: bool, forbid_explicit_octal: bool):
+    if isinstance(data, dict):
+        for key, value in dict(data).items():
+            data[key] = format_octals(
+                value, forbid_implicit_octal, forbid_explicit_octal
+            )
+    elif isinstance(data, list):
+        for index, item in enumerate(list(data)):
+            data[index] = format_octals(
+                item, forbid_implicit_octal, forbid_explicit_octal
+            )
+    elif isinstance(data, OctalInt):
+        if forbid_explicit_octal:
+            return int(data)
+    elif isinstance(data, ScalarInt):
+        if forbid_implicit_octal:
+            return int(data)
+
+    return data
 
 
 class Loader(RoundTripLoader):
@@ -97,6 +120,8 @@ def read_and_format_text(
     comment_starting_space = comments.DEFAULT.get("require-starting-space")
     # TODO: min-spaces-from-content, ignore-shebangs
     new_line_type = new_lines.DEFAULT.get("type")
+    forbid_explicit_octal = octal_values.DEFAULT.get("forbid-explicit-octal")
+    forbid_implicit_octal = octal_values.DEFAULT.get("forbid-implicit-octal")
     if config and config.rules:
         rules = config.rules
 
@@ -145,6 +170,15 @@ def read_and_format_text(
                 new_line_rule.get("type", new_line_type) if new_line_rule else None
             )
 
+        if "octal-values" in rules:
+            octal_value_rule = rules["octal-values"]
+            forbid_explicit_octal = octal_value_rule and octal_value_rule.get(
+                "forbid-explicit-octal", forbid_explicit_octal
+            )
+            forbid_implicit_octal = octal_value_rule and octal_value_rule.get(
+                "forbid-implicit-octal", forbid_implicit_octal
+            )
+
     if indent == "consistent":
         indent = find_first_indent(text) or 2
 
@@ -166,6 +200,9 @@ def read_and_format_text(
     data = load(text, Loader)
     if comment_starting_space:
         format_comments(data)
+    if forbid_explicit_octal or forbid_implicit_octal:
+        data = format_octals(data, forbid_implicit_octal, forbid_explicit_octal)
+
     return dump(
         data,
         Dumper=RoundTripDumper,
