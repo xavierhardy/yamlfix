@@ -6,8 +6,8 @@ from tests.utils import LoggingTester
 from yamlfix.formatting import read_and_format_text
 
 
-class NewLinesRuleTest(LoggingTester):
-    """new-lines"""
+class NewLineAtEndOfFileRuleTest(LoggingTester):
+    """new-line-at-end-of-file"""
 
     def test_no_config(self):
         expected = """---
@@ -19,19 +19,20 @@ test:
       something: else
 """
 
-        content = """---\r
-test:\r
-   key: value\r
-   lst:\r
-      - item1\r
-   obj:\r
-      something: else\r
-"""
+        content = """---
+test:
+   key: value
+   lst:
+      - item1
+   obj:
+      something: else"""
         output = read_and_format_text(content)
         self.assertEqual(expected, output)
 
-    def test_default_enabled(self):
-        config_content = '{"extends": "default", "rules": {"new-lines": "enable"}}'
+    def test_enabled(self):
+        config_content = (
+            '{"extends": "default", "rules": {"new-line-at-end-of-file": "enable"}}'
+        )
 
         expected = """---
 test:
@@ -40,100 +41,38 @@ test:
     - item1
 """
 
-        content = """---\r
-test:\r
-  key: value\r
-  lst:\r
-    - item1\r
-"""
+        content = """---
+test:
+  key: value
+  lst:
+    - item1"""
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
         output = read_and_format_text(content)
         self.assertEqual(expected, output)
 
-    def test_default_disabled_unix(self):
-        config_content = '{"extends": "default", "rules": {"new-lines": "disable"}}'
-
-        expected = """---
-test:
-  key: value
-  lst:
-    - item1
-"""
-
-        content = """---
-test:
-  key: value
-  lst:
-    - item1
-"""
-        output = read_and_format_text(content, YamlLintConfig(content=config_content))
-        self.assertEqual(expected, output)
-
-    def test_default_disabled_dos(self):
-        config_content = '{"extends": "default", "rules": {"new-lines": "disable"}}'
-
-        expected = """---\r
-test:\r
-  key: value\r
-  lst:\r
-    - item1\r
-"""
-
-        content = """---\r
-test:\r
-  key: value\r
-  lst:\r
-    - item1\r
-"""
-        output = read_and_format_text(content, YamlLintConfig(content=config_content))
-        self.assertEqual(expected, output)
-
-    def test_unix_type(self):
+    def test_disabled(self):
         config_content = (
-            '{"extends": "default", "rules": {"new-lines": {"type": "unix"}}}'
+            '{"extends": "default", "rules": {"new-line-at-end-of-file": "disable"}}'
         )
 
         expected = """---
 test:
   key: value
   lst:
-    - item1
-"""
-
-        content = """---\r
-test:\r
-  key: value\r
-  lst:\r
-    - item1\r
-"""
-        output = read_and_format_text(content, YamlLintConfig(content=config_content))
-        self.assertEqual(expected, output)
-
-    def test_dos_type(self):
-        config_content = (
-            '{"extends": "default", "rules": {"new-lines": {"type": "dos"}}}'
-        )
-
-        expected = """---\r
-test:\r
-  key: value\r
-  lst:\r
-    - item1\r
-"""
+    - item1"""
 
         content = """---
 test:
   key: value
   lst:
-    - item1
-"""
+    - item1"""
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
-    def test_already_unix_type(self):
+    def test_disabled_present(self):
         config_content = (
-            '{"extends": "default", "rules": {"new-lines": {"type": "unix"}}}'
+            '{"extends": "default", "rules": {"new-line-at-end-of-file": "disable"}}'
         )
 
         expected = """---
@@ -152,9 +91,30 @@ test:
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
-    def test_already_dos_type(self):
+    def test_dos_disabled(self):
         config_content = (
-            '{"extends": "default", "rules": {"new-lines": {"type": "dos"}}}'
+            '{"extends": "default", '
+            '"rules": {"new-line-at-end-of-file": "disable", "new-lines": {"type": "dos"}}}'
+        )
+
+        expected = """---\r
+test:\r
+  key: value\r
+  lst:\r
+    - item1"""
+
+        content = """---\r
+test:\r
+  key: value\r
+  lst:\r
+    - item1"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+
+    def test_dos_disabled_present(self):
+        config_content = (
+            '{"extends": "default", '
+            '"rules": {"new-line-at-end-of-file": "disable", "new-lines": {"type": "dos"}}}'
         )
 
         expected = """---\r
@@ -170,6 +130,90 @@ test:\r
   lst:\r
     - item1\r
 """
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+
+    def test_dos_enabled(self):
+        config_content = (
+            '{"extends": "default", '
+            '"rules": {"new-line-at-end-of-file": "enable", "new-lines": {"type": "dos"}}}'
+        )
+
+        expected = """---\r
+test:\r
+  key: value\r
+  lst:\r
+    - item1\r
+"""
+
+        content = """---\r
+test:\r
+  key: value\r
+  lst:\r
+    - item1"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+
+    def test_unix_disabled(self):
+        config_content = (
+            '{"extends": "default", '
+            '"rules": {"new-line-at-end-of-file": "disable", "new-lines": {"type": "unix"}}}'
+        )
+
+        expected = """---
+test:
+  key: value
+  lst:
+    - item1"""
+
+        content = """---
+test:
+  key: value
+  lst:
+    - item1"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+
+    def test_unix_disabled_present(self):
+        config_content = (
+            '{"extends": "default", '
+            '"rules": {"new-line-at-end-of-file": "disable", "new-lines": {"type": "unix"}}}'
+        )
+
+        expected = """---
+test:
+  key: value
+  lst:
+    - item1
+"""
+
+        content = """---
+test:
+  key: value
+  lst:
+    - item1
+"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+
+    def test_unix_enabled(self):
+        config_content = (
+            '{"extends": "default", '
+            '"rules": {"new-line-at-end-of-file": "enable", "new-lines": {"type": "unix"}}}'
+        )
+
+        expected = """---
+test:
+  key: value
+  lst:
+    - item1
+"""
+
+        content = """---
+test:
+  key: value
+  lst:
+    - item1"""
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 

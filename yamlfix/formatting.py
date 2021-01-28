@@ -122,6 +122,7 @@ def read_and_format_text(
     new_line_type = new_lines.DEFAULT.get("type")
     forbid_explicit_octal = octal_values.DEFAULT.get("forbid-explicit-octal")
     forbid_implicit_octal = octal_values.DEFAULT.get("forbid-implicit-octal")
+    new_line_at_end_of_file = None
     if config and config.rules:
         rules = config.rules
 
@@ -170,6 +171,8 @@ def read_and_format_text(
                 new_line_rule.get("type", new_line_type) if new_line_rule else None
             )
 
+        new_line_at_end_of_file = rules.get("new-line-at-end-of-file")
+
         if "octal-values" in rules:
             octal_value_rule = rules["octal-values"]
             forbid_explicit_octal = octal_value_rule and octal_value_rule.get(
@@ -197,13 +200,15 @@ def read_and_format_text(
     else:
         line_break = "\n"
 
+    has_new_line_at_end_of_file = text.endswith("\r\n" if "\r\n" in text else "\n")
+
     data = load(text, Loader)
     if comment_starting_space:
         format_comments(data)
     if forbid_explicit_octal or forbid_implicit_octal:
         data = format_octals(data, forbid_implicit_octal, forbid_explicit_octal)
 
-    return dump(
+    result = dump(
         data,
         Dumper=RoundTripDumper,
         explicit_start=explicit_start,
@@ -212,3 +217,12 @@ def read_and_format_text(
         indent=indent,
         line_break=line_break,
     )
+
+    if (
+        not new_line_at_end_of_file
+        and not has_new_line_at_end_of_file
+        and result.endswith(line_break)
+    ):
+        return result[: -len(line_break)]
+
+    return result
