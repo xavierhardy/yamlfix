@@ -12,14 +12,14 @@ from yamlfix.rules.types import FormattingResult, FormattingRule
 def remove_prefix(text: str, max_size: int = 0) -> str:
     start, index = count_newline_chars(iter(text), max_size)
     if index:
-        return text[index - start:]
+        return text[index - start :]  # noqa: E203
     return text
 
 
 def remove_suffix(text: str, max_size: int = 0) -> str:
     start, index = count_newline_chars(reversed(text), max_size)
     if index:
-        return text[:- index + start]
+        return text[: -index + start]
     return text
 
 
@@ -33,7 +33,7 @@ def extract_prefix(text: str, max_size: int = 0) -> str:
 def extract_suffix(text: str, max_size: int = 0) -> str:
     start, index = count_newline_chars(reversed(text), max_size)
     if index:
-        return text[-index:len(text) - start]
+        return text[-index : len(text) - start]  # noqa: E203
     return ""
 
 

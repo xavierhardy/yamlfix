@@ -36,9 +36,7 @@ test:
         self.assertEqual(expected, output)
 
     def test_enabled(self):
-        config_content = (
-            '{"extends": "default", "rules": {"empty-lines": "enable"}}'
-        )
+        config_content = '{"extends": "default", "rules": {"empty-lines": "enable"}}'
 
         expected = """---
 test:
@@ -62,9 +60,7 @@ test:
         self.assertEqual(expected, output)
 
     def test_disabled(self):
-        config_content = (
-            '{"extends": "default", "rules": {"empty-lines": "disable"}}'
-        )
+        config_content = '{"extends": "default", "rules": {"empty-lines": "disable"}}'
 
         expected = """---
 test:
@@ -83,9 +79,7 @@ test:
         self.assertEqual(expected, output)
 
     def test_disabled_present(self):
-        config_content = (
-            '{"extends": "default", "rules": {"empty-lines": "disable"}}'
-        )
+        config_content = '{"extends": "default", "rules": {"empty-lines": "disable"}}'
 
         expected = """
 
