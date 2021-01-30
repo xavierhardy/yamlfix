@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import OrderedDict
+
 
 from yamlfix.rules import (
     # braces,
@@ -24,7 +26,7 @@ from yamlfix.rules import (
     # comments_indentation,
     document_end,
     document_start,
-    # empty_lines,
+    empty_lines,
     # empty_values,
     # hyphens,
     indentation,
@@ -48,7 +50,7 @@ RULES = {
     # comments_indentation.ID: comments_indentation,
     document_end.ID: document_end,
     document_start.ID: document_start,
-    # empty_lines.ID: empty_lines,
+    empty_lines.ID: empty_lines,
     # empty_values.ID: empty_values,
     # hyphens.ID: hyphens,
     indentation.ID: indentation,
