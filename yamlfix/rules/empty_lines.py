@@ -2,38 +2,33 @@
 empty-lines
 """
 
-from typing import Any, Iterator, Tuple
+from typing import Any, Iterator
 
 from yamllint.rules.empty_lines import DEFAULT, ID  # noqa: F401
 
 from yamlfix.rules.types import FormattingResult, FormattingRule
 
 
-def extract_prefix(text: str, max_size: int = 0) -> str:
-    start, index = count_newline_chars(iter(text), max_size)
+def extract_prefix(text: str) -> str:
+    index = count_newline_chars(iter(text))
     if index:
-        return text[start:index]
+        return text[:index]
     return ""
 
 
-def extract_suffix(text: str, max_size: int = 0, line_break: str = "\n") -> str:
-    start, index = count_newline_chars(reversed(text), max_size, line_break)
+def extract_suffix(text: str) -> str:
+    index = count_newline_chars(reversed(text))
     if index:
-        return text[-index : len(text) - start]  # noqa: E203
+        return text[-index : len(text)]  # noqa: E203
     return ""
 
 
-def count_newline_chars(
-    text: Iterator[str], max_size: int = 0, line_break: str = "\n"
-) -> Tuple[int, int]:
-    start = 0
+def count_newline_chars(text: Iterator[str]) -> int:
     for index, chrc in enumerate(text):
         if chrc not in ("\n", "\r"):
-            return start, index
-        elif chrc == line_break[0] and max_size > 0:
-            max_size -= 1
-            start += len(line_break)
-    return start, 0
+            return index
+
+    return 0
 
 
 def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
@@ -48,13 +43,11 @@ def apply_on_result(result: str, original: str, rule: FormattingRule) -> str:
     original_line_break = "\r\n" if "\r\n" in original else "\n"
     line_break = "\r\n" if "\r\n" in result else "\n"
     original_prefix = extract_prefix(original).replace(original_line_break, line_break)
-    original_suffix = extract_suffix(original, line_break=line_break).replace(
-        original_line_break, line_break
-    )
+    original_suffix = extract_suffix(original).replace(original_line_break, line_break)
 
     if rule is not None and not rule:
         if original_prefix or original_suffix:
-            _, length_end = count_newline_chars(reversed(result))
+            length_end = count_newline_chars(reversed(result))
             if length_end:
                 return original_prefix + result[:-length_end] + original_suffix
 
@@ -77,7 +70,7 @@ def apply_on_result(result: str, original: str, rule: FormattingRule) -> str:
         max_end = max_all
 
     if original_prefix or original_suffix:
-        _, length_end = count_newline_chars(reversed(result))
+        length_end = count_newline_chars(reversed(result))
         return (
             original_prefix[: max_start * len(line_break)]
             + result[:-length_end]
