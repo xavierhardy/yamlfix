@@ -2,7 +2,7 @@
 empty-lines
 """
 
-from typing import Any, Iterator
+from typing import Any, Iterator, List
 
 from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from ruamel.yaml.tokens import CommentToken
@@ -12,43 +12,53 @@ from yamlfix.rules.types import FormattingResult, FormattingRule
 from yamlfix.rules import new_lines
 
 
+def extract_newlines(text: Iterator[str]) -> Iterator[str]:
+    for chrc in text:
+        if chrc in ("\n", "\r"):
+            yield chrc
+        else:
+            break
+
+
 def extract_prefix(text: str) -> str:
-    index = count_newline_chars(iter(text))
-    if index:
-        return text[:index]
-    return ""
+    return "".join(extract_newlines(iter(text)))
 
 
 def extract_suffix(text: str) -> str:
-    index = count_newline_chars(reversed(text))
-    if index:
-        return text[-index : len(text)]  # noqa: E203
-    return ""
+    result = []
+    for chrc in text:
+        if chrc in ("\n", "\r"):
+            result.append(chrc)
+        else:
+            result = []
+    return "".join(result)
 
 
 def count_newline_chars(text: Iterator[str]) -> int:
     index = 0
     for index, chrc in enumerate(text):
         if chrc not in ("\n", "\r"):
-            return index
+            break
 
     return index
 
 
-def fix_empty_line_group(comment: CommentToken, max_length: int, line_break: str):
-    # once parsed, only UNIX line breaks are kept
+def skip_extra_new_lines(lines: List[str], max_length: int) -> Iterator[str]:
     count = 0
-    result = []
-    for line in comment.value.split("\n"):
+    for line in lines:
         if not line:
             if count <= max_length + 1:
-                result.append(line)
+                yield line
             count += 1
         else:
-            result.append(line)
+            yield line
             count = 0
 
-    text = line_break.join(result)
+
+def fix_empty_line_group(comment: CommentToken, max_length: int, line_break: str):
+    # once parsed, only UNIX line breaks are kept
+    lines = comment.value.split("\n")
+    text = line_break.join(skip_extra_new_lines(lines, max_length))
 
     # the dumper replaces the last line break, with `line_break`
     if line_break != "\n" and text.endswith(line_break):
