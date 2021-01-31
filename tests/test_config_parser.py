@@ -1,4 +1,6 @@
 import unittest
+from contextlib import redirect_stderr
+from io import StringIO
 from logging import INFO
 from unittest import TestCase
 
@@ -27,7 +29,9 @@ class ConfigTest(TestCase):
         self.assertFalse(config.get("verbose"))
 
     def test_parsing_invalid_config(self):
-        self.assertRaises(SystemExit, parse_arguments, "-l", "3", "-v")
+        with StringIO() as f:
+            with redirect_stderr(f):
+                self.assertRaises(SystemExit, parse_arguments, "-l", "3", "-v")
 
 
 if __name__ == "__main__":
