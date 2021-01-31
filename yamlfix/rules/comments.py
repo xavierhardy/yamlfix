@@ -14,25 +14,20 @@ from yamlfix.rules.types import FormattingResult, FormattingRule
 COMMENT_START_REGEX = re.compile(r"^(\r?\n?) *(#+)([^ #\r\n].*\r?\n)")
 
 
-def fix_comment_start(comment: CommentToken):
-    comment.value = COMMENT_START_REGEX.sub(r"\1\2 \3", comment.value)
+def fix_comment_start(text: str) -> str:
+    return COMMENT_START_REGEX.sub(r"\1\2 \3", text)
 
 
 def format_comments(data: Any) -> Any:
-    if isinstance(data, (CommentedMap, CommentedSeq)):
+    if isinstance(data, CommentToken):
+        data.value = fix_comment_start(data.value)
+    elif isinstance(data, (CommentedMap, CommentedSeq)):
         comment = data.ca.comment
         for comment_token in comment or []:
-            if isinstance(comment_token, CommentToken):
-                fix_comment_start(comment_token)
-            elif isinstance(comment_token, list):
-                for tkn in comment_token:
-                    if isinstance(tkn, CommentToken):
-                        fix_comment_start(tkn)
+            format_comments(comment_token)
 
         for token_list in data.ca.items.values():
-            for token in token_list:
-                if isinstance(token, CommentToken):
-                    fix_comment_start(token)
+            format_comments(token_list)
 
         # it won't work with items() or iterating through it like list
         if isinstance(data, CommentedMap):
@@ -41,6 +36,9 @@ def format_comments(data: Any) -> Any:
         else:
             for indx in range(len(data)):
                 format_comments(data[indx])
+    elif isinstance(data, list):
+        for tkn in data:
+            format_comments(tkn)
 
     return data
 
