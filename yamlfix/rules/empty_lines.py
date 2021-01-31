@@ -68,20 +68,15 @@ def fix_empty_line_group(comment: CommentToken, max_length: int, line_break: str
 
 
 def fix_empty_lines(data: Any, max_length: int, line_break: str) -> Any:
-    if isinstance(data, (CommentedMap, CommentedSeq)):
+    if isinstance(data, CommentToken):
+        fix_empty_line_group(data, max_length, line_break)
+    elif isinstance(data, (CommentedMap, CommentedSeq)):
         comment = data.ca.comment
         for comment_token in comment or []:
-            if isinstance(comment_token, CommentToken):
-                fix_empty_line_group(comment_token, max_length, line_break)
-            elif isinstance(comment_token, list):
-                for tkn in comment_token:
-                    if isinstance(tkn, CommentToken):
-                        fix_empty_line_group(tkn, max_length, line_break)
+            fix_empty_lines(comment_token, max_length, line_break)
 
         for token_list in data.ca.items.values():
-            for token in token_list:
-                if isinstance(token, CommentToken):
-                    fix_empty_line_group(token, max_length, line_break)
+            fix_empty_lines(token_list, max_length, line_break)
 
         # it won't work with items() or iterating through it like list
         if isinstance(data, CommentedMap):
@@ -90,6 +85,9 @@ def fix_empty_lines(data: Any, max_length: int, line_break: str) -> Any:
         else:
             for indx in range(len(data)):
                 fix_empty_lines(data[indx], max_length, line_break)
+    elif isinstance(data, list):
+        for token in data:
+            fix_empty_lines(token, max_length, line_break)
 
     return data
 
