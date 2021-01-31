@@ -45,31 +45,35 @@ def count_newline_chars(text: Iterator[str]) -> int:
 
 def skip_extra_new_lines(lines: List[str], max_length: int) -> Iterator[str]:
     count = 0
+    line = ""
     for line in lines:
         if not line:
-            if count <= max_length + 1:
+            if count <= max_length:
                 yield line
-            count += 1
+                count += 1
         else:
             yield line
             count = 0
+    if not line and count == max_length + 1:
+        yield line
 
 
-def fix_empty_line_group(comment: CommentToken, max_length: int, line_break: str):
+def fix_empty_line_group(text: str, max_length: int, line_break: str):
+    line_break = "\n"
     # once parsed, only UNIX line breaks are kept
-    lines = comment.value.split("\n")
-    text = line_break.join(skip_extra_new_lines(lines, max_length))
+    lines = text.replace("\r\n", "\n").split("\n")
+    result = line_break.join(skip_extra_new_lines(lines, max_length))
 
     # the dumper replaces the last line break, with `line_break`
-    if line_break != "\n" and text.endswith(line_break):
-        comment.value = text[: -len(line_break)] + "\n"
-    else:
-        comment.value = text
+    if line_break != "\n" and result.endswith(line_break):
+        return result[: -len(line_break)] + "\n"
+
+    return result
 
 
 def fix_empty_lines(data: Any, max_length: int, line_break: str) -> Any:
     if isinstance(data, CommentToken):
-        fix_empty_line_group(data, max_length, line_break)
+        data.value = fix_empty_line_group(data.value, max_length, line_break)
     elif isinstance(data, (CommentedMap, CommentedSeq)):
         comment = data.ca.comment
         for comment_token in comment or []:
@@ -111,6 +115,13 @@ def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -
     return data
 
 
+def replace_linebreaks(text: str, line_break: str) -> str:
+    if line_break == "\n":
+        return text
+
+    return text.replace("\r\n", "\n").replace("\n", "\r\n")
+
+
 def apply_on_result(result: str, original: str, rule: FormattingRule) -> str:
     original_line_break = "\r\n" if "\r\n" in original else "\n"
     line_break = "\r\n" if "\r\n" in result else "\n"
@@ -121,11 +132,15 @@ def apply_on_result(result: str, original: str, rule: FormattingRule) -> str:
         if original_prefix or original_suffix:
             length_end = count_newline_chars(reversed(result))
             if length_end:
-                return original_prefix + result[:-length_end] + original_suffix
+                return replace_linebreaks(
+                    original_prefix + result[:-length_end] + original_suffix, line_break
+                )
 
-            return original_prefix + result + original_suffix
+            return replace_linebreaks(
+                original_prefix + result + original_suffix, line_break
+            )
 
-        return result
+        return replace_linebreaks(result, line_break)
 
     max_start = DEFAULT.get("max-start")
     max_end = DEFAULT.get("max-end")
@@ -143,9 +158,10 @@ def apply_on_result(result: str, original: str, rule: FormattingRule) -> str:
 
     if original_prefix or original_suffix:
         length_end = count_newline_chars(reversed(result))
-        return (
+        return replace_linebreaks(
             original_prefix[: max_start * len(line_break)]
             + result[:-length_end]
-            + original_suffix[: (max_end + 1) * len(line_break)]
+            + original_suffix[: (max_end + 1) * len(line_break)],
+            line_break,
         )
-    return result
+    return replace_linebreaks(result, line_break)

@@ -391,6 +391,83 @@ test:\r
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
+    def test_unix_lines_in_the_middle_with_comments(self):
+        config_content = (
+            '{"extends": "default", '
+            '"rules": {"empty-lines": {"max": 5}, "new-lines": {"type": "unix"}}}'
+        )
+
+        expected = """---
+test:
+  key: value
+
+
+
+
+
+# some test
+
+# some test
+
+  lst:
+    - item1
+"""
+
+        content = """---
+test:
+  key: value
+
+
+
+
+
+
+
+
+# some test
+
+# some test
+
+  lst:
+    - item1
+"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+
+    def test_dos_lines_in_the_middle_with_comments(self):
+        config_content = (
+            '{"extends": "default", '
+            '"rules": {"empty-lines": {"max": 5}, "new-lines": {"type": "dos"}}}'
+        )
+
+        expected = """---\r
+test:\r
+  key: value\r
+\r
+\r
+# some test\r
+\r
+# some test\r
+\r
+  lst:\r
+    - item1\r
+"""
+
+        content = """---\r
+test:\r
+  key: value\r
+\r
+\r
+# some test\r
+\r
+# some test\r
+\r
+  lst:\r
+    - item1\r
+"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+
 
 if __name__ == "__main__":
     unittest.main()
