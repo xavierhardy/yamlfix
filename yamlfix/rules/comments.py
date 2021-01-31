@@ -11,7 +11,7 @@ from yamllint.rules.comments import DEFAULT, ID  # noqa: F401
 
 from yamlfix.rules.types import FormattingResult, FormattingRule
 
-COMMENT_START_REGEX = re.compile(r"^(\n?) *(#+)([^ #\n].*\n)")
+COMMENT_START_REGEX = re.compile(r"^(\r?\n?) *(#+)([^ #\r\n].*\r?\n)")
 
 
 def fix_comment_start(comment: CommentToken):
@@ -49,7 +49,7 @@ def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
     return FormattingResult(text=text, dumping_config={})
 
 
-def apply_before_dump(data: Any, rule: FormattingRule) -> Any:
+def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -> Any:
     comment_starting_space = DEFAULT.get("require-starting-space")
     if rule is not None:
         comment_starting_space = rule and rule.get(

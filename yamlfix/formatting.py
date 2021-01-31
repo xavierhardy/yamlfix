@@ -41,7 +41,7 @@ def read_and_format_text(
     data = load(text, Loader)
 
     for rule_id, rule in RULES.items():
-        data = rule.apply_before_dump(data, rules.get(rule_id))
+        data = rule.apply_before_dump(data, rules.get(rule_id), text, rules)
 
     result = dump(data, Dumper=RoundTripDumper, **dumping_config)
 

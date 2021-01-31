@@ -291,6 +291,72 @@ test:
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
 
+    def test_unix_lines_in_the_middle(self):
+        config_content = (
+            '{"extends": "default", '
+            '"rules": {"empty-lines": {"max": 5}, "new-lines": {"type": "unix"}}}'
+        )
+
+        expected = """---
+test:
+  key: value
+
+
+
+
+
+  lst:
+    - item1
+"""
+
+        content = """---
+test:
+  key: value
+
+
+
+
+
+
+  lst:
+    - item1
+"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+
+    def test_dos_lines_in_the_middle(self):
+        config_content = (
+            '{"extends": "default", '
+            '"rules": {"empty-lines": {"max": 5}, "new-lines": {"type": "dos"}}}'
+        )
+
+        expected = """---\r
+test:\r
+  key: value\r
+\r
+\r
+\r
+\r
+\r
+  lst:\r
+    - item1\r
+"""
+
+        content = """---\r
+test:\r
+  key: value\r
+\r
+\r
+\r
+\r
+\r
+\r
+  lst:\r
+    - item1\r
+"""
+        output = read_and_format_text(content, YamlLintConfig(content=config_content))
+        self.assertEqual(expected, output)
+
     def test_dos_max_start_end(self):
         config_content = (
             '{"extends": "default", '

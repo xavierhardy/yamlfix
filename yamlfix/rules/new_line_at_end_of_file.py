@@ -13,7 +13,7 @@ def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
     return FormattingResult(text=text, dumping_config={})
 
 
-def apply_before_dump(data: Any, rule: FormattingRule) -> Any:
+def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -> Any:
     return data
 
 

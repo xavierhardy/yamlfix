@@ -34,7 +34,7 @@ def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
     return FormattingResult(text=text, dumping_config={})
 
 
-def apply_before_dump(data: Any, rule: FormattingRule) -> Any:
+def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -> Any:
     forbid_explicit_octal = DEFAULT.get("forbid-explicit-octal")
     forbid_implicit_octal = DEFAULT.get("forbid-implicit-octal")
     if rule is not None:
