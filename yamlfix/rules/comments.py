@@ -11,11 +11,11 @@ from yamllint.rules.comments import DEFAULT, ID  # noqa: F401
 
 from yamlfix.rules.types import FormattingResult, FormattingRule
 
-COMMENT_START_REGEX = re.compile(r"^(\r?\n?) *(#+)([^ #\r\n].*\r?\n)")
+COMMENT_START_REGEX = re.compile(r"^(\r?\n?)( *)(#+)([^ #\r\n].*\r?\n)")
 
 
 def fix_comment_start(text: str) -> str:
-    return COMMENT_START_REGEX.sub(r"\1\2 \3", text)
+    return COMMENT_START_REGEX.sub(r"\1\2\3 \4", text)
 
 
 def format_comments(data: Any) -> Any:
