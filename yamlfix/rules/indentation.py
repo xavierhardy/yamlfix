@@ -25,7 +25,7 @@ def find_first_indent(text):
             indent += 1
 
 
-def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
+def get_config(text: str, rule: FormattingRule) -> dict:
     indent = DEFAULT.get("spaces")
     block_seq_indent = DEFAULT.get("indent-sequences")
     if rule is not None:
@@ -47,10 +47,11 @@ def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
     else:
         block_seq_indent = None
 
-    return FormattingResult(
-        text=text,
-        dumping_config={"block_seq_indent": block_seq_indent, "indent": indent},
-    )
+    return {"block_seq_indent": block_seq_indent, "indent": indent}
+
+
+def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
+    return FormattingResult(text=text, dumping_config=get_config(text, rule),)
 
 
 def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -> Any:
