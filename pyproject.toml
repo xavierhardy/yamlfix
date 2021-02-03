@@ -20,7 +20,7 @@ yamlfix = "yamlfix.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-"ruamel.yaml" = "^0.16.10"
+"ruamel.yaml" = "^0.16.12"
 yamllint = "^1.25.0"
 
 [tool.poetry.dev-dependencies]
