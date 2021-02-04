@@ -21,7 +21,9 @@ def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
         if explicit_end is None:
             explicit_end = text.strip().endswith("...")
 
-    return FormattingResult(text=text, dumping_config={"explicit_end": explicit_end})
+    return FormattingResult(
+        text=text, dumping_config={"explicit_end": explicit_end}, loading_config={}
+    )
 
 
 def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -> Any:

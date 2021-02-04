@@ -60,7 +60,7 @@ def replace_empty_values(
 
 
 def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
-    return FormattingResult(text=text, dumping_config={})
+    return FormattingResult(text=text, dumping_config={}, loading_config={})
 
 
 # TODO: support not modifying existing format if rule is disabled

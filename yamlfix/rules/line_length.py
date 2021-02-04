@@ -15,7 +15,9 @@ def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
     if rule is not None:
         width = rule.get("max", width) if rule else maxsize
 
-    return FormattingResult(text=text, dumping_config={"width": width},)
+    return FormattingResult(
+        text=text, dumping_config={"width": width}, loading_config={}
+    )
 
 
 def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -> Any:

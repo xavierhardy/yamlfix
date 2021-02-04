@@ -39,14 +39,16 @@ def read_and_format_text(
         setlocale(LC_COLLATE, config.locale)
 
     dumping_config = {}
+    loading_config = {}
     rules = config.rules if config else {}
     for rule_id, rule in RULES.items():
         result = rule.apply_before_load(text, rules.get(rule_id))
 
         text = result.text
         dumping_config.update(result.dumping_config)
+        loading_config.update(result.loading_config)
 
-    data = load(text, Loader)
+    data = load(text, Loader, **loading_config)
 
     for rule_id, rule in RULES.items():
         data = rule.apply_before_dump(data, rules.get(rule_id), text, rules)

@@ -51,7 +51,9 @@ def get_config(text: str, rule: FormattingRule) -> dict:
 
 
 def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
-    return FormattingResult(text=text, dumping_config=get_config(text, rule),)
+    return FormattingResult(
+        text=text, dumping_config=get_config(text, rule), loading_config={}
+    )
 
 
 def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -> Any:

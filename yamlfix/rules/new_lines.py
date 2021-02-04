@@ -24,7 +24,9 @@ def get_line_break(text: str, rule: FormattingRule) -> str:
 
 def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
     line_break = get_line_break(text, rule)
-    return FormattingResult(text=text, dumping_config={"line_break": line_break})
+    return FormattingResult(
+        text=text, dumping_config={"line_break": line_break}, loading_config={}
+    )
 
 
 def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -> Any:

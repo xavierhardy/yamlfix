@@ -22,7 +22,7 @@ def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
             explicit_start = text.strip().startswith("---")
 
     return FormattingResult(
-        text=text, dumping_config={"explicit_start": explicit_start}
+        text=text, dumping_config={"explicit_start": explicit_start}, loading_config={}
     )
 
 

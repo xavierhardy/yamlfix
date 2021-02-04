@@ -31,7 +31,7 @@ def format_octals(data: Any, forbid_implicit_octal: bool, forbid_explicit_octal:
 
 
 def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
-    return FormattingResult(text=text, dumping_config={})
+    return FormattingResult(text=text, dumping_config={}, loading_config={})
 
 
 def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -> Any:
