@@ -9,7 +9,7 @@ from yamllint.rules.document_end import DEFAULT, ID  # noqa: F401
 from yamlfix.rules.types import FormattingResult, FormattingRule
 
 
-def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
+def apply_before_load(text: str, rule: FormattingRule, rules: dict) -> FormattingResult:
     explicit_end = DEFAULT.get("present")
     if rule is not None:
         if not rule:

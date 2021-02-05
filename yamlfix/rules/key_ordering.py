@@ -49,7 +49,7 @@ def fix_key_ordering(data: Any) -> Tuple[bool, Any]:
     return has_changes, data
 
 
-def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
+def apply_before_load(text: str, rule: FormattingRule, rules: dict) -> FormattingResult:
     return FormattingResult(text=text, dumping_config={}, loading_config={})
 
 

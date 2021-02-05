@@ -96,7 +96,7 @@ def fix_empty_lines(data: Any, max_length: int, line_break: str) -> Any:
     return data
 
 
-def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
+def apply_before_load(text: str, rule: FormattingRule, rules: dict) -> FormattingResult:
     return FormattingResult(text=text, dumping_config={}, loading_config={})
 
 

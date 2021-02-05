@@ -10,7 +10,7 @@ from yamllint.rules.line_length import DEFAULT, ID  # noqa: F401
 from yamlfix.rules.types import FormattingResult, FormattingRule
 
 
-def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
+def apply_before_load(text: str, rule: FormattingRule, rules: dict) -> FormattingResult:
     width = DEFAULT.get("max", maxsize)
     if rule is not None:
         width = rule.get("max", width) if rule else maxsize

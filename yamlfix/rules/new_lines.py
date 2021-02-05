@@ -22,7 +22,7 @@ def get_line_break(text: str, rule: FormattingRule) -> str:
     return "\n"
 
 
-def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
+def apply_before_load(text: str, rule: FormattingRule, rules: dict) -> FormattingResult:
     line_break = get_line_break(text, rule)
     return FormattingResult(
         text=text, dumping_config={"line_break": line_break}, loading_config={}

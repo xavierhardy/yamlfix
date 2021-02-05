@@ -30,7 +30,7 @@ def format_octals(data: Any, forbid_implicit_octal: bool, forbid_explicit_octal:
     return data
 
 
-def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
+def apply_before_load(text: str, rule: FormattingRule, rules: dict) -> FormattingResult:
     return FormattingResult(text=text, dumping_config={}, loading_config={})
 
 

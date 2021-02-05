@@ -42,7 +42,7 @@ def read_and_format_text(
     loading_config = {}
     rules = config.rules if config else {}
     for rule_id, rule in RULES.items():
-        result = rule.apply_before_load(text, rules.get(rule_id))
+        result = rule.apply_before_load(text, rules.get(rule_id), rules)
 
         text = result.text
         dumping_config.update(result.dumping_config)

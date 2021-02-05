@@ -128,21 +128,9 @@ def get_options(rule: FormattingRule) -> QuotedStringOptions:
     )
 
 
-def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
-    if not rule:
-        preserve_quotes = True
-    else:
-        options = get_options(rule)
-
-        if options.required == TRUE and options.quote_type != ANY:
-            preserve_quotes = None
-        else:
-            preserve_quotes = True
-
+def apply_before_load(text: str, rule: FormattingRule, rules: dict) -> FormattingResult:
     return FormattingResult(
-        text=text,
-        dumping_config={},
-        loading_config={"preserve_quotes": preserve_quotes},
+        text=text, dumping_config={}, loading_config={"preserve_quotes": False},
     )
 
 

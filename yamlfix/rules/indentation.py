@@ -50,7 +50,7 @@ def get_config(text: str, rule: FormattingRule) -> dict:
     return {"block_seq_indent": block_seq_indent, "indent": indent}
 
 
-def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
+def apply_before_load(text: str, rule: FormattingRule, rules: dict) -> FormattingResult:
     return FormattingResult(
         text=text, dumping_config=get_config(text, rule), loading_config={}
     )

@@ -9,7 +9,7 @@ from yamllint.rules.new_line_at_end_of_file import ID  # noqa: F401
 from yamlfix.rules.types import FormattingResult, FormattingRule
 
 
-def apply_before_load(text: str, rule: FormattingRule) -> FormattingResult:
+def apply_before_load(text: str, rule: FormattingRule, rules: dict) -> FormattingResult:
     return FormattingResult(text=text, dumping_config={}, loading_config={})
 
 
