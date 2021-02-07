@@ -16,7 +16,7 @@
 
 
 from yamlfix.rules import (
-    # braces,
+    braces,
     # brackets,
     # colons,
     # commas,
@@ -40,7 +40,7 @@ from yamlfix.rules import (
 )
 
 RULES = {
-    # braces.ID: braces,
+    braces.ID: braces,
     # brackets.ID: brackets,
     # colons.ID: colons,
     # commas.ID: commas,
