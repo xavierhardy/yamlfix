@@ -124,6 +124,28 @@ class ConfigTest(LoggingTester):
             logger.critical(CRITICAL_MSG)
             self.assert_log(CRITICAL_MSG, stream)
 
+    def test_quiet_config(self):
+        with StringIO() as stream:
+            config = Config({"quiet": True})
+            logger = getLogger("ConfigTest.test_quiet_config")
+            configure_app(config, logger, handler=StreamHandler(stream))
+            self.assert_empty_log(stream)
+
+            logger.debug(DEBUG_MSG)
+            self.assert_empty_log(stream)
+
+            logger.info(INFO_MSG)
+            self.assert_empty_log(stream)
+
+            logger.warning(WARNING_MSG)
+            self.assert_empty_log(stream)
+
+            logger.error(ERROR_MSG)
+            self.assert_log(ERROR_MSG, stream)
+
+            logger.critical(CRITICAL_MSG)
+            self.assert_log(CRITICAL_MSG, stream)
+
 
 if __name__ == "__main__":
     unittest.main()
