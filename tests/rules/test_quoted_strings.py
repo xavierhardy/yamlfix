@@ -15,6 +15,11 @@ test42: {something469: 'value'}
 test43:
     hey879: "someothervalue"
     hey880: somevalue
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         content = """---
@@ -22,6 +27,11 @@ test42: {something469: 'value'}
 test43:
     hey879: "someothervalue"
     hey880: somevalue
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
         output = read_and_format_text(content)
         self.assertEqual(expected, output)
@@ -34,6 +44,11 @@ test42: {something469: 'value'}
 test43:
     hey879: "someothervalue"
     hey880: "somevalue"
+    lst:
+        - 'someitem'
+        - "someotheritem"
+        - "somefinalitem"
+        - "item4"
 """
 
         content = """---
@@ -41,6 +56,11 @@ test42: {something469: 'value'}
 test43:
     hey879: "someothervalue"
     hey880: somevalue
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -54,6 +74,11 @@ test42: {something469: 'value'}
 test43:
     hey879: 'someothervalue'
     hey880: 'somevalue'
+    lst:
+        - 'someitem'
+        - 'someotheritem'
+        - 'somefinalitem'
+        - 'item4'
 """
 
         content = """---
@@ -61,6 +86,11 @@ test42: {something469: 'value'}
 test43:
     hey879: "someothervalue"
     hey880: somevalue
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -74,6 +104,11 @@ test42: {something469: "value"}
 test43:
     hey879: "someothervalue"
     hey880: "somevalue"
+    lst:
+        - "someitem"
+        - "someotheritem"
+        - "somefinalitem"
+        - "item4"
 """
 
         content = """---
@@ -81,6 +116,11 @@ test42: {something469: 'value'}
 test43:
     hey879: "someothervalue"
     hey880: somevalue
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -94,6 +134,11 @@ test42: {something469: 'value'}
 test43:
     hey879: 'someothervalue'
     hey880: somevalue
+    lst:
+        - 'someitem'
+        - someotheritem
+        - 'somefinalitem'
+        - item4
 """
 
         content = """---
@@ -101,6 +146,11 @@ test42: {something469: 'value'}
 test43:
     hey879: "someothervalue"
     hey880: somevalue
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -114,6 +164,11 @@ test42: {something469: "value"}
 test43:
     hey879: "someothervalue"
     hey880: somevalue
+    lst:
+        - "someitem"
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         content = """---
@@ -121,6 +176,11 @@ test42: {something469: 'value'}
 test43:
     hey879: "someothervalue"
     hey880: somevalue
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -138,6 +198,11 @@ test43:
     hey879: someothervalue
     hey880: somevalue
     required: '{this: needsquotes}'
+    lst:
+        - someitem
+        - someotheritem
+        - somefinalitem
+        - item4
 """
 
         content = """---
@@ -146,6 +211,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: '{this: needsquotes}'
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -163,6 +233,11 @@ test43:
     hey879: someothervalue
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - someitem
+        - someotheritem
+        - somefinalitem
+        - item4
 """
 
         content = """---
@@ -171,6 +246,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -185,6 +265,11 @@ test43:
     hey879: someothervalue
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - someitem
+        - someotheritem
+        - somefinalitem
+        - item4
 """
 
         content = """---
@@ -193,6 +278,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -214,6 +304,11 @@ test43:
     hey879: 'someothervalue'
     hey880: 'somevalue'
     required: '{this: needsquotes}'
+    lst:
+        - 'someitem'
+        - 'someotheritem'
+        - 'somefinalitem'
+        - item4
 """
 
         content = """---
@@ -222,6 +317,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: '{this: needsquotes}'
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -243,6 +343,11 @@ test43:
     hey879: "someothervalue"
     hey880: "somevalue"
     required: "{this: needsquotes}"
+    lst:
+        - "someitem"
+        - "someotheritem"
+        - "somefinalitem"
+        - item4
 """
 
         content = """---
@@ -251,6 +356,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -270,6 +380,11 @@ test43:
     hey879: "someothervalue"
     hey880: "somevalue"
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - "someotheritem"
+        - "somefinalitem"
+        - item4
 """
 
         content = """---
@@ -278,6 +393,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -295,6 +415,11 @@ test43:
     hey879: 'someothervalue'
     hey880: 'somevalue'
     required: '{this: needsquotes}'
+    lst:
+        - 'someitem'
+        - 'someotheritem'
+        - 'somefinalitem'
+        - item4
 """
 
         content = """---
@@ -303,6 +428,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: '{this: needsquotes}'
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -320,6 +450,11 @@ test43:
     hey879: "someothervalue"
     hey880: "somevalue"
     required: "{this: needsquotes}"
+    lst:
+        - "someitem"
+        - "someotheritem"
+        - "somefinalitem"
+        - item4
 """
 
         content = """---
@@ -328,6 +463,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -345,6 +485,11 @@ test43:
     hey879: "someothervalue"
     hey880: "somevalue"
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - "someotheritem"
+        - "somefinalitem"
+        - item4
 """
 
         content = """---
@@ -353,6 +498,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -372,6 +522,11 @@ test43:
     hey879: 'someothervalue'
     hey880: somevalue
     required: '{this: needsquotes}'
+    lst:
+        - 'someitem'
+        - someotheritem
+        - 'somefinalitem'
+        - item4
 """
 
         content = """---
@@ -380,6 +535,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: '{this: needsquotes}'
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -399,6 +559,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - "someitem"
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         content = """---
@@ -407,6 +572,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -426,6 +596,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         content = """---
@@ -434,6 +609,11 @@ test43:
     hey879: "someothervalue"
     hey880: somevalue
     required: "{this: needsquotes}"
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
@@ -447,6 +627,11 @@ test42: {something469: 'value'}
 test43:
     hey879: "someothervalue"
     hey880: somevalue
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         content = """---
@@ -454,6 +639,11 @@ test42: {something469: 'value'}
 test43:
     hey879: "someothervalue"
     hey880: somevalue
+    lst:
+        - 'someitem'
+        - someotheritem
+        - "somefinalitem"
+        - item4
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))

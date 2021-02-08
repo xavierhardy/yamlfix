@@ -66,48 +66,39 @@ def replace_quoted_strings(data: Any, options: QuotedStringOptions) -> Any:
         else DoubleQuotedScalarString
     )
     patterns = options.extra_required + options.extra_allowed
-    if isinstance(data, (CommentedMap, CommentedSeq)):
-        # it won't work with items() or iterating through it like list
-        if isinstance(data, CommentedMap):
-            for key in data.keys():
-                value = data[key]
-                if (
-                    options.required == ONLY_WHEN_NEEDED
-                    and isinstance(
-                        value, (SingleQuotedScalarString, DoubleQuotedScalarString)
-                    )
-                    and not _quotes_are_needed(value)
-                    and all(pattern.search(value) is None for pattern in patterns)
-                ):
-                    data[key] = PlainScalarString(value)
-                elif (
-                    isinstance(value, str)
-                    and (
-                        options.required == TRUE
-                        or _quotes_are_needed(value)
-                        or any(
-                            pattern.search(value) is not None
-                            for pattern in options.extra_required
-                        )
-                    )
-                    and not isinstance(
-                        value, (SingleQuotedScalarString, DoubleQuotedScalarString)
-                    )
-                ):
-                    data[key] = quote_cast(value)
-                elif options.quote_type == SINGLE and isinstance(
-                    value, DoubleQuotedScalarString
-                ):
-                    data[key] = SingleQuotedScalarString(value)
-                elif options.quote_type == DOUBLE and isinstance(
-                    value, SingleQuotedScalarString
-                ):
-                    data[key] = DoubleQuotedScalarString(value)
-
-                replace_quoted_strings(data[key], options)
-        else:
-            for indx in range(len(data)):
-                replace_quoted_strings(data[indx], options)
+    # it won't work with items() or iterating through it like list
+    if isinstance(data, CommentedMap):
+        for key in data.keys():
+            data[key] = replace_quoted_strings(data[key], options)
+    elif isinstance(data, CommentedSeq):
+        for indx in range(len(data)):
+            data[indx] = replace_quoted_strings(data[indx], options)
+    elif isinstance(data, str):
+        if (
+            options.required == ONLY_WHEN_NEEDED
+            and isinstance(data, (SingleQuotedScalarString, DoubleQuotedScalarString))
+            and not _quotes_are_needed(data)
+            and all(pattern.search(data) is None for pattern in patterns)
+        ):
+            return PlainScalarString(data)
+        elif (
+            options.required == TRUE
+            or _quotes_are_needed(data)
+            or any(
+                pattern.search(data) is not None for pattern in options.extra_required
+            )
+        ) and not isinstance(
+            data, (SingleQuotedScalarString, DoubleQuotedScalarString)
+        ):
+            return quote_cast(data)
+        elif options.quote_type == SINGLE and isinstance(
+            data, DoubleQuotedScalarString
+        ):
+            return SingleQuotedScalarString(data)
+        elif options.quote_type == DOUBLE and isinstance(
+            data, SingleQuotedScalarString
+        ):
+            return DoubleQuotedScalarString(data)
     return data
 
 
