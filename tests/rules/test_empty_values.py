@@ -15,6 +15,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880:
+    lst: [key: ]
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -22,6 +25,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880: null
+    lst: [key: null]
+    lst2:
+        - key2: null
 """
         output = read_and_format_text(content)
         self.assertEqual(expected, output)
@@ -34,6 +40,9 @@ test42: {something469: null}
 test43:
     hey879: null
     hey880: null
+    lst: [key: null]
+    lst2:
+        - key2: null
 """
 
         content = """---
@@ -41,6 +50,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880: null
+    lst: [key: null]
+    lst2:
+        - key2: null
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
@@ -56,6 +68,9 @@ test42: {something469: null}
 test43:
     hey879: null
     hey880: null
+    lst: [key: null]
+    lst2:
+        - key2: null
 """
 
         content = """---
@@ -63,6 +78,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880: null
+    lst: [key: null]
+    lst2:
+        - key2: null
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
@@ -78,6 +96,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880:
+    lst: [key: ]
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -85,6 +106,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880: null
+    lst: [key: null]
+    lst2:
+        - key2: null
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
@@ -100,6 +124,9 @@ test42: {something469: }
 test43:
     hey879: null
     hey880: null
+    lst: [key: ]
+    lst2:
+        - key2: null
 """
 
         content = """---
@@ -107,6 +134,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880: null
+    lst: [key: null]
+    lst2:
+        - key2: null
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
@@ -122,6 +152,9 @@ test42: {something469: null}
 test43:
     hey879:
     hey880:
+    lst: [key: null]
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -129,6 +162,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880: null
+    lst: [key: null]
+    lst2:
+        - key2: null
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
@@ -141,6 +177,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880:
+    lst: [key: ]
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -148,6 +187,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880: null
+    lst: [key: null]
+    lst2:
+        - key2: null
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
@@ -160,6 +202,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880:
+    lst: [key: ]
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -167,6 +212,9 @@ test42: {something469: }
 test43:
     hey879:
     hey880:
+    lst: [key: null]
+    lst2:
+        - key2: null
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
