@@ -16,6 +16,9 @@ test43:
     noquote: TRuE
     hey879: 'TRuE'
     "off": "FALSE"
+    lst: [key: ]
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -24,6 +27,9 @@ test43:
     noquote: TRuE
     hey879: 'TRuE'
     "off": "FALSE"
+    lst: [key: ]
+    lst2:
+        - key2:
 """
         output = read_and_format_text(content)
         self.assertEqual(expected, output)
@@ -38,6 +44,9 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
+    lst: [key: ]
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -47,6 +56,9 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
+    lst: [key: ]
+    lst2:
+        - key2:
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
@@ -62,6 +74,10 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
+    lst:
+        - key:
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -71,6 +87,9 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
+    lst: [key: ]
+    lst2:
+        - key2:
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
@@ -86,6 +105,10 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
+    lst:
+        - key:
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -95,6 +118,9 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
+    lst: [key: ]
+    lst2:
+        - key2:
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
@@ -109,6 +135,9 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
+    lst: [key: ]
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -118,6 +147,9 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
+    lst: [key: ]
+    lst2:
+        - key2:
 """
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
         self.assertEqual(expected, output)
@@ -132,6 +164,9 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
+    lst: [key: ]
+    lst2:
+        - key2:
 """
 
         content = """---
@@ -141,6 +176,9 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
+    lst: [key: ]
+    lst2:
+        - key2:
 """
 
         output = read_and_format_text(content, YamlLintConfig(content=config_content))
