@@ -34,6 +34,11 @@ def fix_key_ordering(data: Any) -> Tuple[bool, Any]:
             new_data.merge.extend(data.merge)
             new_data.tag.value = data.tag.value
 
+            if data.fa._flow_style:
+                new_data.fa.set_flow_style()
+            else:
+                new_data.fa.set_block_style()
+
             for key in ordered_keys:
                 _, new_data[key] = fix_key_ordering(data[key])
 
