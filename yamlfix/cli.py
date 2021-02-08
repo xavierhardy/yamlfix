@@ -8,7 +8,7 @@ from logging import getLogger, Logger, Handler, INFO, WARN
 from os import cpu_count
 from os.path import abspath
 from sys import argv
-from typing import Sequence
+from typing import Sequence, NamedTuple
 
 from yamllint.config import YamlLintConfig
 
@@ -18,8 +18,14 @@ from yamlfix.files import find_files, format_file
 
 LOGGER = getLogger(__name__)
 
+LogMessage = NamedTuple(
+    "LogMessage", (("level", int), ("message", str), ("kwargs", dict))
+)
 
-def log_result(total: int, changed: int, errors: int, check_only: bool = False):
+
+def format_result(
+    total: int, changed: int, errors: int, check_only: bool = False
+) -> LogMessage:
     untouched = total - changed - errors
     verb = " would be" if check_only else ""
     error_verb = "would fail" if check_only else "failed"
@@ -37,7 +43,7 @@ def log_result(total: int, changed: int, errors: int, check_only: bool = False):
             0,
             "1 file%(verb)s reformatted"
             if changed == 1
-            else "%(changed)d%(verb)s reformatted",
+            else "%(changed)d files%(verb)s reformatted",
         )
         log_level = WARN
 
@@ -45,17 +51,17 @@ def log_result(total: int, changed: int, errors: int, check_only: bool = False):
         result_texts.append(
             "1 file %(error_verb)s to reformat"
             if errors == 1
-            else "%(errors)d %(error_verb)s to reformat",
+            else "%(errors)d files %(error_verb)s to reformat",
         )
         log_level = WARN
         message = "Oh no!"
     else:
         message = "All done!"
 
-    LOGGER.log(
-        log_level,
-        "%s\n%s." % (message, ", ".join(result_texts)),
-        dict(
+    return LogMessage(
+        level=log_level,
+        message="%s\n%s." % (message, ", ".join(result_texts)),
+        kwargs=dict(
             changed=changed,
             errors=errors,
             untouched=untouched,
@@ -111,7 +117,11 @@ def main(args: Sequence[str] = None, logger: Logger = None, handler: Handler = N
                 error_count += 1
                 LOGGER.error("error: cannot format %s: %s", full_path, e)
 
-    log_result(len(paths), changed_file_count, error_count, check_only=check_only)
+    LOGGER.log(
+        *format_result(
+            len(paths), changed_file_count, error_count, check_only=check_only
+        )
+    )
     return error_count > 0 and (not check_only or changed_file_count == 0)
 
 
