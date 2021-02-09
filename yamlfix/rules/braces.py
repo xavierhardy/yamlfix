@@ -39,8 +39,6 @@ def set_block_style(data: Any) -> Any:
         for key in data.keys():
             set_block_style(data[key])
     elif isinstance(data, CommentedSeq):
-        data.fa.set_block_style()
-
         for indx in range(len(data)):
             set_block_style(data[indx])
     return data

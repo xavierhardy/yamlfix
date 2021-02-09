@@ -74,8 +74,7 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
-    lst:
-        - key:
+    lst: [key: ]
     lst2:
         - key2:
 """
@@ -105,8 +104,7 @@ test43:
     hey879: 'TRuE'
     "off": "FALSE"
     empty: {}
-    lst:
-        - key:
+    lst: [key: ]
     lst2:
         - key2:
 """
