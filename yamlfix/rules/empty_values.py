@@ -98,5 +98,7 @@ def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -
     return replace_empty_values(data, forbid_in_block_mappings, forbid_in_flow_mappings)
 
 
-def apply_on_result(result: str, original: str, rule: FormattingRule) -> str:
+def apply_on_result(
+    result: str, original: str, rule: FormattingRule, rules: dict
+) -> str:
     return result.replace("!!null ''", "")

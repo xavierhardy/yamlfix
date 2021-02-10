@@ -35,7 +35,7 @@ from yamlfix.rules import (
     new_lines,
     octal_values,
     quoted_strings,
-    # trailing_spaces,
+    trailing_spaces,
     truthy,
 )
 
@@ -59,6 +59,6 @@ RULES = {
     new_lines.ID: new_lines,
     octal_values.ID: octal_values,
     quoted_strings.ID: quoted_strings,
-    # trailing_spaces.ID: trailing_spaces,
+    trailing_spaces.ID: trailing_spaces,
     truthy.ID: truthy,
 }

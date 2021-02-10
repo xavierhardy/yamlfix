@@ -65,5 +65,7 @@ def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -
     return fix_key_ordering(data)[1]
 
 
-def apply_on_result(result: str, original: str, rule: FormattingRule) -> str:
+def apply_on_result(
+    result: str, original: str, rule: FormattingRule, rules: dict
+) -> str:
     return result

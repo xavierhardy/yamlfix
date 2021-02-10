@@ -72,5 +72,7 @@ def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -
     return format_comments(data, indent, block_seq_indent or 0)
 
 
-def apply_on_result(result: str, original: str, rule: FormattingRule) -> str:
+def apply_on_result(
+    result: str, original: str, rule: FormattingRule, rules: dict
+) -> str:
     return result

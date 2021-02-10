@@ -17,7 +17,9 @@ def apply_before_dump(data: Any, rule: FormattingRule, text: str, rules: dict) -
     return data
 
 
-def apply_on_result(result: str, original: str, rule: FormattingRule) -> str:
+def apply_on_result(
+    result: str, original: str, rule: FormattingRule, rules: dict
+) -> str:
     line_break = "\r\n" if "\r\n" in result else "\n"
     has_new_line_at_end_of_file = original.endswith(line_break)
 

@@ -56,7 +56,7 @@ def read_and_format_text(
     result = dump(data, Dumper=RoundTripDumper, **dumping_config)
 
     for rule_id, rule in RULES.items():
-        result = rule.apply_on_result(result, text, rules.get(rule_id))
+        result = rule.apply_on_result(result, text, rules.get(rule_id), rules)
 
     if config and config.locale:
         setlocale(LC_COLLATE, default_locale)

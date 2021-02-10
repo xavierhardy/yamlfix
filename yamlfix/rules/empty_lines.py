@@ -122,7 +122,9 @@ def replace_linebreaks(text: str, line_break: str) -> str:
     return text.replace("\r\n", "\n").replace("\n", "\r\n")
 
 
-def apply_on_result(result: str, original: str, rule: FormattingRule) -> str:
+def apply_on_result(
+    result: str, original: str, rule: FormattingRule, rules: dict
+) -> str:
     original_line_break = "\r\n" if "\r\n" in original else "\n"
     line_break = "\r\n" if "\r\n" in result else "\n"
     original_prefix = extract_prefix(original).replace(original_line_break, line_break)
