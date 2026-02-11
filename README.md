@@ -42,6 +42,28 @@ optional arguments:
                         CRITICAL, default: INFO)
 ```
 
+### Examples
+
+Format a single YAML file:
+```sh
+./run.sh config.yaml
+```
+
+Format all YAML files in a directory:
+```sh
+./run.sh ./config/
+```
+
+Check if files need reformatting without modifying them:
+```sh
+./run.sh --check config.yaml
+```
+
+Enable verbose logging:
+```sh
+./run.sh -v config.yaml
+```
+
 Tests and linting
 -----------------
 
